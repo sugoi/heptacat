@@ -4,7 +4,8 @@
 name:                heptacat
 version:             0.1.0.0
 synopsis:            Git-based worker array for version-controlled experiments
--- description:         
+description:         Git-based worker array for version-controlled experiments
+
 homepage:            https://github.com/sugoi/heptacat
 license:             BSD3
 license-file:        LICENSE
@@ -16,6 +17,21 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  -- exposed-modules:     
+  exposed-modules:     Heptacat.Options
   -- other-modules:       
-  build-depends:       base ==4.6.*
+  build-depends:       base ==4.*
+                     , optparse-applicative > 0.5
+  ghc-options:         -Wall -O2
+
+executable heptacat
+  ghc-options:         -Wall -O2            
+  hs-source-dirs:      src
+  main-is:             heptacat.hs
+  build-depends:       base ==4.*
+                     , heptacat
+
+
+Source-Repository head
+  Type:                 git
+  Location:             https://github.com/sugoi/heptacat
+
