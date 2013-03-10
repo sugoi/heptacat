@@ -20,7 +20,9 @@ library
   exposed-modules:     Heptacat.Options
   -- other-modules:       
   build-depends:       base ==4.*
-                     , optparse-applicative > 0.5
+                     , cmdargs >= 0.10.2
+                     , MissingH >= 1.2
+
   ghc-options:         -Wall -O2
 
 executable heptacat
