@@ -11,7 +11,7 @@ import           System.IO.Unsafe (unsafePerformIO)
 import           Data.String.Utils (split)
 
 data MyOptions
-  = Worker { subjectRepository :: String, logRepository :: String }
+  = Worker { repositoryUrl :: String }
   | Init
   | Help { helpItem :: String }
   deriving (Show, Data,Typeable)
@@ -57,10 +57,10 @@ myOptions =
     myModes = Opt.modes
       [Init  &= Opt.help "initialize log repository",
        Help { helpItem = Opt.def &= Opt.typ "item" &= Opt.argPos 0 &= Opt.opt ""}
-         &= Opt.help "display help message (for an item)",
-       Worker { subjectRepository = Opt.def &= Opt.argPos 0 &= Opt.typ "subjRep" ,
-                logRepository = Opt.def &= Opt.argPos 1 &= Opt.typ "logRep"
+         &= Opt.help "display help message (for an item)"
+         &= Opt.auto ,
+       Worker { repositoryUrl = Opt.def &= Opt.argPos 0 &= Opt.typ "repUrl"
               }
        &= Opt.help "start worker"
-       &= Opt.details ["start a heptacat worker with given subject repository and log repository. The repository URLs must be of the form git@server.addr:subjRep/repository/url and git@server.addr:log/repository/url, respectively."]
+       &= Opt.details ["start a heptacat worker with given record repository. The repository URL must be what follows 'git clone ' e. g. git@server.addr:log/repository/url ."]
        ]

@@ -17,23 +17,26 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  exposed-modules:     Heptacat.Options
-  -- other-modules:       
-  build-depends:       base ==4.*
-                     , cmdargs >= 0.10.2
-                     , MissingH >= 1.2
+  exposed-modules:     
+                     Heptacat.Options
+                     Heptacat.Repository
 
-  ghc-options:         -Wall -O2
+  build-depends:     base ==4.*
+                   , cmdargs >= 0.10.2
+                   , lens >= 3.8.7.3
+                   , MissingH >= 1.2
+
+  ghc-options:       -Wall -O2
 
 executable heptacat
-  ghc-options:         -Wall -O2            
-  hs-source-dirs:      src
-  main-is:             heptacat.hs
-  build-depends:       base ==4.*
-                     , heptacat
+  ghc-options:       -Wall -O2            
+  hs-source-dirs:    src
+  main-is:           heptacat.hs
+  build-depends:     base ==4.*
+                   , heptacat
 
 
 Source-Repository head
-  Type:                 git
-  Location:             https://github.com/sugoi/heptacat
+  Type:              git
+  Location:          https://github.com/sugoi/heptacat
 
