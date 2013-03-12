@@ -1,1 +1,0 @@
-module Heptacat.Laboratory.Init where
