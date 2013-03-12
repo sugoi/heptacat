@@ -11,7 +11,7 @@ import           System.IO.Unsafe (unsafePerformIO)
 import           Data.String.Utils (split)
 
 data MyOptions
-  = Worker { repositoryUrl :: String }
+  = Worker { repositoryUrl :: String, workerName :: String }
   | Init
   | Help { helpItem :: String }
   deriving (Show, Data,Typeable)
@@ -59,7 +59,8 @@ myOptions =
        Help { helpItem = Opt.def &= Opt.typ "item" &= Opt.argPos 0 &= Opt.opt ""}
          &= Opt.help "display help message (for an item)"
          &= Opt.auto ,
-       Worker { repositoryUrl = Opt.def &= Opt.argPos 0 &= Opt.typ "repUrl"
+       Worker { repositoryUrl = Opt.def &= Opt.argPos 0 &= Opt.typ "repUrl",
+                workerName = Opt.def &= Opt.explicit &= Opt.name "name" &= Opt.opt ""
               }
        &= Opt.help "start worker"
        &= Opt.details ["start a heptacat worker with given record repository. The repository URL must be what follows 'git clone ' e. g. git@server.addr:log/repository/url ."]
