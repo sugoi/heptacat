@@ -19,7 +19,7 @@ cabal-version:       >=1.8
 library
   exposed-modules:     
                      Heptacat.Options
-                     Heptacat.Repository
+                     Heptacat.Laboratory
 
   build-depends:     base ==4.*
                    , cmdargs >= 0.10.2
