@@ -39,7 +39,7 @@ askStr detail msg lens = do
 ioProj :: ProjIO Project
 ioProj = do
   askStr ["I will now set up the contents of a heptacat record repository.",
-          "A record repository contains the experiment project",
+          "A record repository contains the experiment project information",
           "as well as all the experimental results.",
           "The repository URL must be in the form that follows ``git clone'';",
           "e. g. git@server.addr:subject/repository/url ."]
