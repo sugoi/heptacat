@@ -28,6 +28,7 @@ library
                    , lens >= 3.8.7.3
                    , MissingH >= 1.2
                    , mtl >= 2.1.2
+                   , transformers >= 0.3
 
   ghc-options:       -Wall -O2
 
