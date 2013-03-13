@@ -1,15 +1,15 @@
 module Heptacat.Main.Init where
 
-import qualified Data.Yaml as Yaml
 import qualified Data.ByteString.Char8 as BS
+import qualified Data.Yaml as Yaml
+import           System.IO
 
-import Heptacat.Options 
 import Heptacat.Type.IO
 
 main :: IO ()
 main = do
-  print $ myOptions
-  lab <- getLaboratory
-  BS.putStrLn $ Yaml.encode lab
+  proj <- getProject
+  withFile "project.yml" WriteMode $ \h ->
+    BS.hPutStrLn h $ Yaml.encode proj
   
 

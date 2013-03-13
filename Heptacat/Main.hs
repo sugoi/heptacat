@@ -2,7 +2,6 @@ module Heptacat.Main where
 
 
 import Heptacat.Options 
-import Heptacat.Type.IO
 
 import qualified Heptacat.Main.Init as Init
 

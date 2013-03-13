@@ -48,15 +48,15 @@ instance Default RecordRepo where
   def = RecordRepo "" "task" "worker" "result"
 
 
-data Laboratory = Laboratory
+data Project = Project
   {
     _subjectRepo :: SubjectRepo, 
     _recordRepo :: RecordRepo
   }
     deriving (Eq, Show, Data, Typeable, Generic)
 
-instance Default Laboratory where
-  def = Laboratory def def
+instance Default Project where
+  def = Project def def
 
-$(makeLenses ''Laboratory)
-$(deriveJSON (drop 1) ''Laboratory)
+$(makeLenses ''Project)
+$(deriveJSON (drop 1) ''Project)

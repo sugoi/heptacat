@@ -12,12 +12,12 @@ import           Heptacat.Type
 import           System.IO
 import           Text.Printf
 
-type LaboIO = S.StateT Laboratory IO
+type PorjIO = S.StateT Project IO
 
-getLaboratory :: IO Laboratory
-getLaboratory = S.execStateT ioLabo def 
+getProject :: IO Project
+getProject = S.execStateT ioPorj def 
 
-askStr :: String -> L.Lens' Laboratory String -> LaboIO ()
+askStr :: String -> L.Lens' Project String -> PorjIO ()
 askStr msg lens = do
   defVal <- L.use lens
   let msg' = if | defVal /= ""  -> printf "%s [default: %s] " msg defVal
@@ -32,8 +32,8 @@ askStr msg lens = do
      | defVal /= "" -> L.assign lens defVal
      | otherwise    -> askStr msg lens
 
-ioLabo :: LaboIO Laboratory
-ioLabo = do
+ioPorj :: PorjIO Project
+ioPorj = do
   askStr "subject repository url?" $ subjectRepo . url
   askStr "output directory?" $ subjectRepo . outputDir
   askStr "startup script filename?" $ subjectRepo . startUpScript
