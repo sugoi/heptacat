@@ -45,7 +45,7 @@ instance HasUrl RecordRepo where
   url = recordRepoUrl
 
 instance Default RecordRepo where
-  def = RecordRepo "" "task" "woker_state" "result"
+  def = RecordRepo "" "task" "worker" "result"
 
 
 data Laboratory = Laboratory

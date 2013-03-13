@@ -18,6 +18,8 @@ cabal-version:       >=1.8
 
 library
   exposed-modules:     
+                     Heptacat.Main
+                     Heptacat.Main.Init
                      Heptacat.Type
                      Heptacat.Type.IO
                      Heptacat.Options
@@ -40,9 +42,7 @@ executable heptacat
   hs-source-dirs:    src
   main-is:           heptacat.hs
   build-depends:     base ==4.*
-                   , bytestring 
                    , heptacat
-                   , yaml >= 0.8
 
 Source-Repository head
   Type:              git
