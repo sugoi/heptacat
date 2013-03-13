@@ -23,12 +23,15 @@ library
                      Heptacat.Options
 
   build-depends:     base ==4.*
+                   , aeson >= 0.6.1
+                   , bytestring 
                    , cmdargs >= 0.10.2
                    , data-default >= 0.5
                    , lens >= 3.8.7.3
                    , MissingH >= 1.2
                    , mtl >= 2.1.2
                    , transformers >= 0.3
+                   , yaml >= 0.8
 
   ghc-options:       -Wall -O2
 
@@ -37,8 +40,9 @@ executable heptacat
   hs-source-dirs:    src
   main-is:           heptacat.hs
   build-depends:     base ==4.*
+                   , bytestring 
                    , heptacat
-
+                   , yaml >= 0.8
 
 Source-Repository head
   Type:              git
