@@ -21,9 +21,11 @@ library
                      Heptacat.Main
                      Heptacat.Main.Init
                      Heptacat.Main.Worker
+                     Heptacat.Options
                      Heptacat.Type
                      Heptacat.Type.IO
-                     Heptacat.Options
+                     Heptacat.Utils
+
 
   build-depends:     base ==4.*
                    , aeson >= 0.6.1
