@@ -20,6 +20,7 @@ library
   exposed-modules:     
                      Heptacat.Main
                      Heptacat.Main.Init
+                     Heptacat.Main.Worker
                      Heptacat.Type
                      Heptacat.Type.IO
                      Heptacat.Options
@@ -29,6 +30,8 @@ library
                    , bytestring 
                    , cmdargs >= 0.10.2
                    , data-default >= 0.5
+                   , directory 
+                   , filepath
                    , lens >= 3.8.7.3
                    , MissingH >= 1.2
                    , mtl >= 2.1.2
