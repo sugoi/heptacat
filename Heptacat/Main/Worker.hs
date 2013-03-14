@@ -1,5 +1,35 @@
 module Heptacat.Main.Worker where
 
+
+import           Control.Applicative
+import           Control.Lens ((^.))
+import           Control.Monad
+import qualified Data.ByteString.Char8 as BS
+import qualified Data.Yaml as Yaml
+import           System.Cmd (rawSystem)
+import           System.Directory (doesDirectoryExist)
+import           System.FilePath ((</>))
+import qualified System.IO.Strict as Strict
+
+import Heptacat.Options
+import Heptacat.Type
+import Heptacat.Utils
+
+recordRepoDir, projFn :: FilePath
+recordRepoDir = gitUrl2Dir $ repositoryUrl $ myOptions
+projFn = recordRepoDir </> projectYamlFileName
+
+prepareCloneRepo :: String -> IO ()
+prepareCloneRepo giturl = do
+  let repoDir = gitUrl2Dir giturl
+  rde <- doesDirectoryExist repoDir
+  when (not rde) $ do
+    _ <- rawSystem "git" ["clone", giturl]
+    return ()
+  
 main :: IO ()
 main = do
-  putStrLn "worker!"
+  prepareCloneRepo $ repositoryUrl $ myOptions
+  (Just projConfig) <- Yaml.decode <$> BS.readFile projFn
+  print $ (projConfig :: Project)
+  prepareCloneRepo $ projConfig ^. subjectRepo . url
