@@ -6,10 +6,10 @@ import           Control.Lens ((^.))
 import           Control.Monad
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Yaml as Yaml
-import           System.Cmd (rawSystem)
+import           System.Cmd (system, rawSystem)
 import           System.Directory (doesDirectoryExist)
 import           System.FilePath ((</>))
-import qualified System.IO.Strict as Strict
+import           Text.Printf
 
 import Heptacat.Options
 import Heptacat.Project
@@ -26,6 +26,8 @@ prepareCloneRepo giturl = do
   when (not rde) $ do
     _ <- rawSystem "git" ["clone", giturl]
     return ()
+  _ <- system $ printf "cd %s; git pull" repoDir
+  return ()
 
 main :: IO ()
 main = do
