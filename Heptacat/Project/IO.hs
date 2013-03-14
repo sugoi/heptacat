@@ -1,7 +1,7 @@
 {-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE RankNTypes #-}
 
-module Heptacat.Type.IO where
+module Heptacat.Project.IO where
 
 
 import qualified Control.Lens as L
@@ -9,7 +9,7 @@ import           Control.Monad (when)
 import qualified Control.Monad.State as S
 import           Control.Monad.IO.Class (liftIO)
 import           Data.Default
-import           Heptacat.Type
+import           Heptacat.Project
 import           System.IO
 import           System.Console.CmdArgs.Text
 import           Text.Printf

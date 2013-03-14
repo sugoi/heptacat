@@ -12,7 +12,7 @@ import           System.FilePath ((</>))
 import qualified System.IO.Strict as Strict
 
 import Heptacat.Options
-import Heptacat.Type
+import Heptacat.Project
 import Heptacat.Utils
 
 recordRepoDir, projFn :: FilePath
@@ -26,7 +26,7 @@ prepareCloneRepo giturl = do
   when (not rde) $ do
     _ <- rawSystem "git" ["clone", giturl]
     return ()
-  
+
 main :: IO ()
 main = do
   prepareCloneRepo $ repositoryUrl $ myOptions

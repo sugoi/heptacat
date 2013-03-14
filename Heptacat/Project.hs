@@ -2,7 +2,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Heptacat.Type where
+module Heptacat.Project where
 
 import Control.Lens
 import Data.Aeson.TH
@@ -60,3 +60,5 @@ instance Default Project where
 
 $(makeLenses ''Project)
 $(deriveJSON (drop 1) ''Project)
+
+

@@ -22,10 +22,10 @@ library
                      Heptacat.Main.Init
                      Heptacat.Main.Worker
                      Heptacat.Options
-                     Heptacat.Type
-                     Heptacat.Type.IO
+                     Heptacat.Project
+                     Heptacat.Project.IO
                      Heptacat.Utils
-
+                     Heptacat.Worker
 
   build-depends:     base ==4.*
                    , aeson >= 0.6.1
@@ -39,6 +39,7 @@ library
                    , mtl >= 2.1.2
                    , process >= 1.1.0.2 
                    , strict >= 0.3.2
+                   , time >= 1.4
                    , transformers >= 0.3
                    , yaml >= 0.8
 

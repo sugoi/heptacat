@@ -7,8 +7,8 @@ import           System.IO
 import           System.Directory 
   (createDirectoryIfMissing)
 
-import Heptacat.Type
-import Heptacat.Type.IO
+import Heptacat.Project
+import Heptacat.Project.IO
 import Heptacat.Utils(projectYamlFileName)
 
 main :: IO ()
