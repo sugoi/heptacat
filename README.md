@@ -45,7 +45,12 @@ subjectRepo:
   startUpScript: start
   outputDir: output
   subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject
+node-w0$ cd ..
 ~~~~
 
 **3.** Start the worker. Since `project.yml` exists there, we can just type `heptacat worker` . 
 Also, the worker name will automatically be inferrerd if you skip one.
+
+~~~~ bash
+heptacat-test$ 
+~~~~
