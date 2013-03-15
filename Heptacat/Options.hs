@@ -10,8 +10,10 @@ import           System.Exit
 import           System.IO.Unsafe (unsafePerformIO)
 import           Data.String.Utils (split)
 
+import Heptacat.Utils
+
 data MyOptions
-  = Worker { repositoryUrl :: String, workerName :: String }
+  = Worker {workerName :: String,  projectFileName :: FilePath }
   | Init
   | Help { helpItem :: String }
   deriving (Show, Data,Typeable)
@@ -59,9 +61,12 @@ myOptions =
        Help { helpItem = Opt.def &= Opt.typ "item" &= Opt.argPos 0 &= Opt.opt ""}
          &= Opt.help "display help message (for an item)"
          &= Opt.auto ,
-       Worker { repositoryUrl = Opt.def &= Opt.argPos 0 &= Opt.typ "repUrl",
-                workerName = Opt.def &= Opt.explicit &= Opt.name "name" &= Opt.opt ""
+       Worker { projectFileName = defaultProjectFileName &= Opt.argPos 0 
+                &= Opt.typ defaultProjectFileName,
+                workerName = Opt.def &= Opt.explicit &= Opt.name "name" 
+                &= Opt.help "worker id string, hopefully a unique one. Automatically generated if not given."
               }
        &= Opt.help "start worker"
-       &= Opt.details ["start a heptacat worker with given record repository. The repository URL must be what follows 'git clone ' e. g. git@server.addr:log/repository/url ."]
+       &= Opt.details ["start a heptacat worker with given project file. The default filename is \""
+                       ++ defaultProjectFileName ++ "\""]
        ]

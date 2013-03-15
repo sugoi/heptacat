@@ -15,10 +15,6 @@ import Heptacat.Options
 import Heptacat.Project
 import Heptacat.Utils
 
-recordRepoDir, projFn :: FilePath
-recordRepoDir = gitUrl2Dir $ repositoryUrl $ myOptions
-projFn = recordRepoDir </> projectYamlFileName
-
 prepareCloneRepo :: String -> IO ()
 prepareCloneRepo giturl = do
   let repoDir = gitUrl2Dir giturl
@@ -31,7 +27,6 @@ prepareCloneRepo giturl = do
 
 main :: IO ()
 main = do
-  prepareCloneRepo $ repositoryUrl $ myOptions
-  (Just projConfig) <- Yaml.decode <$> BS.readFile projFn
-  print $ (projConfig :: Project)
+  (Just projConfig) <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
   prepareCloneRepo $ projConfig ^. subjectRepo . url
+  prepareCloneRepo $ projConfig ^. recordRepo  . url

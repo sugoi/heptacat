@@ -9,12 +9,12 @@ import           System.Directory
 
 import Heptacat.Project
 import Heptacat.Project.IO
-import Heptacat.Utils(projectYamlFileName)
+import Heptacat.Utils(defaultProjectFileName)
 
 main :: IO ()
 main = do
   proj <- getProject
-  withFile projectYamlFileName WriteMode $ \h ->
+  withFile defaultProjectFileName WriteMode $ \h ->
     BS.hPutStrLn h $ Yaml.encode proj
   let mkdirP = createDirectoryIfMissing True 
   mkdirP $ proj ^. recordRepo.taskListDir

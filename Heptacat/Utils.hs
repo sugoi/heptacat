@@ -16,6 +16,6 @@ gitUrl2Dir url =
       reverse str
 
 
-projectYamlFileName :: FilePath
-projectYamlFileName = "project.yml"
+defaultProjectFileName :: FilePath
+defaultProjectFileName = "project.yml"
 
