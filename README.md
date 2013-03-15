@@ -52,5 +52,5 @@ node-w0$ cd ..
 Also, the worker name will automatically be inferrerd if you skip one.
 
 ~~~~ bash
-heptacat-test$ 
+heptacat-test$ heptacat worker
 ~~~~
