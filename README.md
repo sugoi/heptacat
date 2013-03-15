@@ -35,6 +35,7 @@ heptacat-test$ cp node-m/heptacat-example-record/project.yml node-w0/
 heptacat-test$ cd node-w0/
 node-w0$ emacs project.yml  
 node-w0$ cat project.yml
+workerNameInCharge: ''
 recordRepo:
   workerStateDir: worker
   recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record
@@ -46,4 +47,5 @@ subjectRepo:
   subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject
 ~~~~
 
-**3.** Start the worker. Since `project.yml` exists there, we can just type `heptacat worker` .
+**3.** Start the worker. Since `project.yml` exists there, we can just type `heptacat worker` . 
+Also, the worker name will automatically be inferrerd if you skip one.
