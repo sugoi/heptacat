@@ -46,4 +46,4 @@ subjectRepo:
   subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject
 ~~~~
 
-**3.** Start the worker. Since ~'project.yml'~
+**3.** Start the worker. Since `project.yml` exists there, we can just type `heptacat worker` .
