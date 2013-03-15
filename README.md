@@ -45,3 +45,5 @@ subjectRepo:
   outputDir: output
   subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject
 ~~~~
+
+**3.** Start the worker. Since ~'project.yml'~
