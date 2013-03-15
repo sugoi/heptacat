@@ -37,11 +37,11 @@ node-w0$ emacs project.yml
 node-w0$ cat project.yml
 recordRepo:
   workerStateDir: worker
-  recordRepoUrl: /home/nushio/heptacat-test/heptacat-example-record
+  recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record
   taskListDir: task
   resultDir: result
 subjectRepo:
   startUpScript: start
   outputDir: output
-  subjectRepoUrl: /home/nushio/heptacat-test/heptacat-example-subject
+  subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject
 ~~~~
