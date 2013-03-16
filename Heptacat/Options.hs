@@ -62,7 +62,8 @@ myOptions =
          &= Opt.help "display help message (for an item)"
          &= Opt.auto ,
        Worker { projectFileName = defaultProjectFileName &= Opt.argPos 0 
-                &= Opt.typ defaultProjectFileName,
+                &= Opt.typ defaultProjectFileName 
+                &= Opt.opt defaultProjectFileName ,
                 workerName = Opt.def &= Opt.explicit &= Opt.name "name" 
                 &= Opt.help "worker id string, hopefully a unique one. Automatically generated if not given."
               }

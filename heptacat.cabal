@@ -40,6 +40,7 @@ library
                    , process >= 1.1.0.2 
                    , time >= 1.4
                    , transformers >= 0.3
+                   , unix >= 2.6.0
                    , yaml >= 0.8
 
   ghc-options:       -Wall -O2
