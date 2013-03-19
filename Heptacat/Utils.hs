@@ -3,18 +3,19 @@ module Heptacat.Utils where
 import Data.String.Utils (split)
 import System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
 import System.Process (runInteractiveProcess)
+import System.IO
 
 gitUrl2Dir :: String -> FilePath
-gitUrl2Dir url = 
+gitUrl2Dir url =
   removeDotGit $
   last $ split "/" $ last $ split ":" $
   reverse $ dropWhile (=='/') $ reverse $
   url
   where
     removeDotGit :: String -> String
-    removeDotGit str = 
+    removeDotGit str =
       reverse $
-      (\x -> if take 4 x == "tig." then drop 4 x else x)$        
+      (\x -> if take 4 x == "tig." then drop 4 x else x)$
       reverse str
 
 
@@ -39,5 +40,4 @@ gitCommitId = do
 
 gitAtomically :: IO a -> IO a
 gitAtomically io = do
-  oldCommitId <- gitCommitId             
-  
+  oldCommitId <- gitCommitId
