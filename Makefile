@@ -14,3 +14,6 @@ test: build
 
 doc:
 	cabal haddock --hyperlink-source
+
+install:
+	cabal install
