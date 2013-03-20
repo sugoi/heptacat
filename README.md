@@ -31,6 +31,7 @@ node-m$ cd ..
 **2.** Copy the project file, edit it to point to the local repository.
 
 ~~~~ bash
+heptacat-test$ mkdir node-w0
 heptacat-test$ cp node-m/heptacat-example-record/project.yml node-w0/
 heptacat-test$ cd node-w0/
 node-w0$ emacs project.yml  

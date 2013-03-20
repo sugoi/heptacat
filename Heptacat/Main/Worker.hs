@@ -27,6 +27,12 @@ prepareCloneRepo giturl = do
 
 main :: IO ()
 main = do
+  print myOptions
   (Just projConfig) <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
   prepareCloneRepo $ projConfig ^. subjectRepo . url
   prepareCloneRepo $ projConfig ^. recordRepo  . url
+  let subjDir = gitUrl2Dir $ projConfig ^. subjectRepo . url
+      recoDir = gitUrl2Dir $ projConfig ^. recordRepo . url
+  withWorkingDirectory recoDir $ do      
+    gitAtomically $ do
+      return ()

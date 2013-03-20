@@ -2,7 +2,7 @@ module Heptacat.Utils where
 
 import Data.String.Utils (split)
 import System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
-import System.Process (runInteractiveProcess)
+import System.Process
 import System.IO
 
 gitUrl2Dir :: String -> FilePath
@@ -36,8 +36,10 @@ gitCommitId = do
   (_,hOut,_,hProc) <- runInteractiveCommand "git log | head -n 1"
   str <- hGetContents hOut
   waitForProcess hProc
-  retturn $ words str !! 1
+  return $ words str !! 1
 
 gitAtomically :: IO a -> IO a
-gitAtomically io = do
+gitAtomically doSomething = do
   oldCommitId <- gitCommitId
+  putStrLn oldCommitId
+  doSomething
