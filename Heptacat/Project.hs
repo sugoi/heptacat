@@ -30,11 +30,11 @@ instance Default SubjectRepo where
 
 
 data RecordRepo = RecordRepo
-  {    
+  {
     _recordRepoUrl :: String,
     _taskListDir :: FilePath,
     _workerStateDir :: FilePath,
-    _resultDir :: FilePath 
+    _resultDir :: FilePath
   }
     deriving (Eq, Show, Data, Typeable, Generic)
 
@@ -50,15 +50,14 @@ instance Default RecordRepo where
 
 data Project = Project
   {
-    _subjectRepo :: SubjectRepo, 
+    _workerNameInCharge :: String,
+    _subjectRepo :: SubjectRepo,
     _recordRepo :: RecordRepo
   }
     deriving (Eq, Show, Data, Typeable, Generic)
 
 instance Default Project where
-  def = Project def def
+  def = Project "" def def
 
 $(makeLenses ''Project)
 $(deriveJSON (drop 1) ''Project)
-
-
