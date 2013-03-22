@@ -3,11 +3,13 @@ module Heptacat.Main.Worker where
 
 import           Control.Applicative
 import           Control.Lens ((^.))
+import qualified Control.Lens as Lens
 import           Control.Monad
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Yaml as Yaml
 import           System.Cmd (system, rawSystem)
 import           System.Directory (doesDirectoryExist)
+import           System.Exit
 import           System.FilePath ((</>))
 import           Text.Printf
 
@@ -28,7 +30,17 @@ prepareCloneRepo giturl = do
 main :: IO ()
 main = do
   print myOptions
-  (Just projConfig) <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
+  (Just projConfig0) <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
+  let newName = workerName myOptions
+      projConfig 
+        | newName /= "" 
+           = Lens.set workerNameInCharge newName projConfig0 
+        | otherwise = projConfig0
+
+  when (null $ projConfig ^. workerNameInCharge) $ do
+    putStrLn "worker name cannot be obtained neither from configure file nor command line options."        
+    exitFailure
+
   prepareCloneRepo $ projConfig ^. subjectRepo . url
   prepareCloneRepo $ projConfig ^. recordRepo  . url
   let subjDir = gitUrl2Dir $ projConfig ^. subjectRepo . url
