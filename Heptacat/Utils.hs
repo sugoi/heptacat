@@ -43,3 +43,4 @@ gitAtomically doSomething = do
   oldCommitId <- gitCommitId
   putStrLn oldCommitId
   doSomething
+-- git reset --hard reflog

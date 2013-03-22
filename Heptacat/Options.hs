@@ -14,7 +14,9 @@ import Heptacat.Utils
 
 data MyOptions
   = Worker {workerName :: String,  projectFileName :: FilePath }
-  | Init
+  | Init 
+  | Diff  { argv :: [String] }
+  | Merge { argv :: [String] }
   | Help { helpItem :: String }
   deriving (Show, Data,Typeable)
 
