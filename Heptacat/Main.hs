@@ -10,6 +10,6 @@ main =
   case myOptions of
     Init{} -> Init.main
     Worker{} -> Worker.main
-    Diff  argv -> mapM_ putStrLn argv
-    Merge argv -> mapM_ putStrLn argv 
+    Diff  argv -> mapM_ putStrLn $ "heptacat invoked with diff mode.": argv
+    Merge argv -> mapM_ putStrLn $ "heptacat invoked with merge mode.": argv 
     _ -> putStrLn "aieee!"
