@@ -14,7 +14,7 @@ import Heptacat.Utils
 
 data MyOptions
   = Worker {workerName :: String,  projectFileName :: FilePath }
-  | Init 
+  | Init
   | Diff  { argv :: [String] }
   | Merge { argv :: [String] }
   | Help { helpItem :: String }
@@ -25,7 +25,7 @@ data MyOptions
 myOptions :: MyOptions
 myOptions =
   unsafePerformIO $ do
-    parser <- Opt.processArgs heptacat
+    parser <- Opt.processArgs heptacatOpt
     args <- Opt.cmdArgsApply parser
 
     case args of
@@ -33,14 +33,14 @@ myOptions =
         let xs = filter ((==itemStr) . fst) itemHelp
         case xs of
           ((_,x):_) | not (null xs) -> putStrLn x
-          _                     -> print $ Opt.helpText [] Opt.HelpFormatOne heptacat
+          _                     -> print $ Opt.helpText [] Opt.HelpFormatOne heptacatOpt
         _ <- exitSuccess
         return undefined
       _ -> return args
 
   where
-    heptacat :: Opt.Mode (Opt.CmdArgs MyOptions)
-    heptacat = Opt.cmdArgsMode $ myModes
+    heptacatOpt :: Opt.Mode (Opt.CmdArgs MyOptions)
+    heptacatOpt = Opt.cmdArgsMode $ myModes
        &= Opt.program "* heptacat" &= Opt.summary "heptacat (C) Takayuki Muranushi 2013"
 
     progName :: String
@@ -50,7 +50,7 @@ myOptions =
     itemHelp =
       concat $
       map parseItemHelp $
-      split progName $ show heptacat
+      split progName $ show heptacatOpt
 
     parseItemHelp str =
       case words str of
@@ -63,13 +63,18 @@ myOptions =
        Help { helpItem = Opt.def &= Opt.typ "item" &= Opt.argPos 0 &= Opt.opt ""}
          &= Opt.help "display help message (for an item)"
          &= Opt.auto ,
-       Worker { projectFileName = defaultProjectFileName &= Opt.argPos 0 
-                &= Opt.typ defaultProjectFileName 
+       Worker { projectFileName = defaultProjectFileName &= Opt.argPos 0
+                &= Opt.typ defaultProjectFileName
                 &= Opt.opt defaultProjectFileName ,
-                workerName = Opt.def &= Opt.explicit &= Opt.name "name" 
+                workerName = Opt.def &= Opt.explicit &= Opt.name "name"
                 &= Opt.help "worker id string, hopefully a unique one. Automatically generated if not given."
               }
        &= Opt.help "start worker"
        &= Opt.details ["start a heptacat worker with given project file. The default filename is \""
-                       ++ defaultProjectFileName ++ "\""]
+                       ++ defaultProjectFileName ++ "\""],
+       Diff  { argv = Opt.def &= Opt.args }
+       &= Opt.help "perform git diff (for automatic use only)"
+       ,
+       Merge { argv = Opt.def &= Opt.args }
+       &= Opt.help "perform git merge (for automatic use only)"
        ]
