@@ -11,14 +11,14 @@ heptacat interactive tutorial
 ~~~~ bash
 ~$ mkdir heptacat-test; cd heptacat-test
 heptacat-test$ mkdir node-m; cd node-m  # let's pretend that this is the master node
-node-m$ git clone  git@github.com:sugoi/heptacat-example-subject.git
+node-m$ git clone --bare git@github.com:sugoi/heptacat-example-subject.git
 Cloning into 'heptacat-example-subject'...
 remote: Counting objects: 30, done.
 remote: Compressing objects: 100% (25/25), done.
 remote: Total 30 (delta 12), reused 17 (delta 3)
 Receiving objects: 100% (30/30), 4.79 KiB, done.
 Resolving deltas: 100% (12/12), done.
-node-m$ git clone git@github.com:sugoi/heptacat-example-record.git
+node-m$ git clone --bare git@github.com:sugoi/heptacat-example-record.git
 Cloning into 'heptacat-example-record'...
 remote: Counting objects: 14, done.
 remote: Compressing objects: 100% (11/11), done.
@@ -39,13 +39,13 @@ node-w0$ cat project.yml
 workerNameInCharge: ''
 recordRepo:
   workerStateDir: worker
-  recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record
+  recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record.git
   taskListDir: task
   resultDir: result
 subjectRepo:
   startUpScript: start
   outputDir: output
-  subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject
+  subjectRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-subject.git
 node-w0$ cd ..
 ~~~~
 
