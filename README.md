@@ -29,6 +29,7 @@ node-m$ cd ..
 ~~~~
 
 **2.** Copy the project file, edit it to point to the local repository.
+Also let us specify the worker name `worker0` for it.
 
 ~~~~ bash
 heptacat-test$ mkdir node-w0
@@ -36,7 +37,7 @@ heptacat-test$ cp node-m/heptacat-example-record/project.yml node-w0/
 heptacat-test$ cd node-w0/
 node-w0$ emacs project.yml  
 node-w0$ cat project.yml
-workerNameInCharge: ''
+workerNameInCharge: 'worker0'
 recordRepo:
   workerStateDir: worker
   recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record.git
@@ -50,7 +51,7 @@ node-w0$ cd ..
 ~~~~
 
 **3.** Start the worker. Since `project.yml` exists there, we can just type `heptacat worker` . 
-Also, the worker name will automatically be inferrerd if you skip one.
+Also, you can optionally change the worker name if you want.
 
 ~~~~ bash
 heptacat-test$ heptacat worker
