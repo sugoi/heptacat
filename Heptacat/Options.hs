@@ -15,8 +15,8 @@ import Heptacat.Utils
 data MyOptions
   = Worker {workerName :: String,  projectFileName :: FilePath }
   | Init
-  | Diff  { argv :: [String] }
-  | Merge { argv :: [String] }
+  | Diff  { myOptionArgs :: [String] }
+  | Merge { myOptionArgs :: [String] }
   | Help { helpItem :: String }
   deriving (Show, Data,Typeable)
 
@@ -72,9 +72,9 @@ myOptions =
        &= Opt.help "start worker"
        &= Opt.details ["start a heptacat worker with given project file. The default filename is \""
                        ++ defaultProjectFileName ++ "\""],
-       Diff  { argv = Opt.def &= Opt.args }
+       Diff  { myOptionArgs = Opt.def &= Opt.args }
        &= Opt.help "perform git diff (for automatic use only)"
        ,
-       Merge { argv = Opt.def &= Opt.args }
+       Merge { myOptionArgs = Opt.def &= Opt.args }
        &= Opt.help "perform git merge (for automatic use only)"
        ]
