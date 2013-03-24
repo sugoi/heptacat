@@ -2,13 +2,12 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Heptacat.Worker where
+module Heptacat.Task where
 
 import           Control.Applicative ((<|>))
 import           Control.Lens
 import           Data.Aeson
 import           Data.Aeson.TH
--- import qualified Data.Aeson.Generic as DAG
 import           Data.Data
 import           Data.Time (UTCTime, getCurrentTime)
 import           GHC.Generics
@@ -47,3 +46,6 @@ testTasks =
   [ Task "acbd 1 10" [State Start t] ]
   where
     t = unsafePerformIO $ getCurrentTime
+
+
+
