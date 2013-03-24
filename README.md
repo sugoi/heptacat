@@ -38,6 +38,7 @@ node-w0$ emacs project.yml
 node-w0$ cat project.yml
 workerNameInCharge: ''
 recordRepo:
+  taskProgressDir: progress
   workerStateDir: worker
   recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record.git
   taskListDir: task
