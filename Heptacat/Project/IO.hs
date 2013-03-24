@@ -49,6 +49,10 @@ ioProj = do
           "that each contains a list of tasks."]
     "tasklist directory?" $ recordRepo . taskListDir
 
+  askStr ["Task progress directory contains files" ,
+          "that corresponds to task files" ]
+    "progress directory?" $ recordRepo . taskProgressDir
+
   askStr ["The worker-state directory will contain" ,
           "the history of the workers."]
     "worker state directory?" $ recordRepo . workerStateDir

@@ -33,6 +33,7 @@ data RecordRepo = RecordRepo
   {
     _recordRepoUrl :: String,
     _taskListDir :: FilePath,
+    _taskProgressDir :: FilePath,
     _workerStateDir :: FilePath,
     _resultDir :: FilePath
   }
@@ -45,7 +46,7 @@ instance HasUrl RecordRepo where
   url = recordRepoUrl
 
 instance Default RecordRepo where
-  def = RecordRepo "" "task" "worker" "result"
+  def = RecordRepo "" "task" "progress" "worker" "result"
 
 
 data Project = Project

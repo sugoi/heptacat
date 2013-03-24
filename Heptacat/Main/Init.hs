@@ -4,6 +4,7 @@ import           Control.Lens ((^.))
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Yaml as Yaml
 import           System.IO
+import           System.FilePath ((</>))
 import           System.Directory 
   (createDirectoryIfMissing)
 
@@ -16,10 +17,13 @@ main = do
   proj <- getProject
   withFile defaultProjectFileName WriteMode $ \h ->
     BS.hPutStrLn h $ Yaml.encode proj
-  let mkdirP = createDirectoryIfMissing True 
-  mkdirP $ proj ^. recordRepo.taskListDir
-  mkdirP $ proj ^. recordRepo.workerStateDir
-  mkdirP $ proj ^. recordRepo.resultDir
+  let prepareDir dirLens desc = do
+        createDirectoryIfMissing True $ proj ^. recordRepo.dirLens
+        writeFile ((proj ^. recordRepo.dirLens) </> "README") desc
+  prepareDir taskListDir     "# task list are placed here."
+  prepareDir taskProgressDir "# the progress of each task file will be put here."
+  prepareDir workerStateDir  "# the log of each worker will be here."
+  prepareDir resultDir       "# the results will go here."
 
 
 
