@@ -31,6 +31,7 @@ library
                    , aeson >= 0.6.1
                    , bytestring 
                    , cmdargs >= 0.10.2
+                   , containers >= 0.5
                    , data-default >= 0.5
                    , directory 
                    , filepath
