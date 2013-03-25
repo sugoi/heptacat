@@ -22,7 +22,6 @@ gitUrl2Dir url =
       (\x -> if take 4 x == "tig." then drop 4 x else x)$
       reverse str
 
-
 defaultProjectFileName :: FilePath
 defaultProjectFileName = "project.yml"
 
@@ -73,3 +72,13 @@ nonCommentLines = filter (not . isComment) . lines
 
 md5 :: Show a => a -> String
 md5 = MD5.md5s . MD5.Str . show
+
+-- obtain non-whitespace segments and the rest
+wordsN :: String -> [(String, String)]
+wordsN = f . dropWhile isSpace
+  where
+    f [] = repeat ("","")
+    f str = (hd, rest3) : f rest3
+      where
+        (hd, rest2) = span (not.isSpace) str
+        (_ , rest3) = span isSpace rest2
