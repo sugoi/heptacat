@@ -44,6 +44,7 @@ library
                    , process >= 1.1.0.2 
                    , time >= 1.4
                    , transformers >= 0.3
+                   , safe >= 0.3.3
                    , strict >= 0.3.2
                    , unix >= 2.6.0
                    , yaml >= 0.8

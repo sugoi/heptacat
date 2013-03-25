@@ -1,10 +1,12 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TupleSections #-}
+
 
 module Heptacat.Task where
 
-import           Control.Applicative ((<|>))
+import           Control.Applicative 
 import           Control.Lens
 import           Data.Aeson as Aeson
 import           Data.Aeson.TH
@@ -13,51 +15,72 @@ import           Data.Data
 import qualified Data.Map as Map
 import           Data.Time (UTCTime, getCurrentTime)
 import           GHC.Generics
+import           Safe (readMay)
 import           System.IO.Unsafe
 
+import           Heptacat.Utils (wordsN)
 import           Heptacat.Project
 
-data Event = Intact | Start | Timeout | Failure | Success
-    deriving (Eq, Ord, Show, Data, Typeable, Generic)
-$(makeLenses ''Event)
-$(deriveJSON id ''Event)
+data WorkState = Intact | Started | Timeout | Failure | Success
+    deriving (Eq, Ord, Show, Read, Data, Typeable, Generic)
+$(makeLenses ''WorkState)
+$(deriveJSON id ''WorkState)
 
 
-data State
-  = State { _event :: Event,  _timeStamp :: UTCTime } 
+data Event
+  = Event { _timeStamp :: UTCTime, _workState :: WorkState } 
     deriving (Eq, Show, Data, Typeable, Generic)  
-$(makeLenses ''State)
-$(deriveJSON (drop 1) ''State)
+$(makeLenses ''Event)
+$(deriveJSON (drop 1) ''Event)
+
+
+data TaskKey = TaskKey
+  {
+    _reflog  :: String,
+    _cmdLineArgs :: String
+  }
+    deriving (Eq, Show, Data, Typeable, Generic)
+
+$(makeLenses ''TaskKey)
+$(deriveJSON (drop 1) ''TaskKey)
 
   
 data Task = Task
   {
-    _reflog  :: String,
-    _cmdLineArgs :: String,
+    _taskKey :: TaskKey,
     _taskFileName :: FilePath, 
-    _taskState :: Map.Map WorkerName State
+    _taskEvents :: Map.Map WorkerName Event
   }
     deriving (Eq, Show, Data, Typeable, Generic)
 
 $(makeLenses ''Task)
 $(deriveJSON (drop 1) ''Task)
 
-encodeState :: WorkerName -> Task -> State -> String
-encodeState wn ta st = unwords 
-  [read $ BSL.unpack $ Aeson.encode $ st ^. timeStamp, 
-   show $ st ^. event, 
+encodeEvent :: WorkerName -> TaskKey -> Event -> String
+encodeEvent wn tk ev = unwords 
+  [read $ BSL.unpack $ Aeson.encode $ ev ^. timeStamp, 
+   take 7 $ (++ repeat ' ') $ show $ ev ^. workState, 
    wn, 
-   ta ^. reflog, 
-   ta ^. cmdLineArgs]
+   tk ^. reflog, 
+   tk ^. cmdLineArgs]
 
-
-
-
+decodeEvent :: String -> Maybe (WorkerName, TaskKey, Event)      
+decodeEvent str =
+  let ((strTime,_):
+       (strWS,_):
+       (wn,_):
+       (strRef,args):_) = wordsN str
+      tk = TaskKey strRef args
+      maybeTime = Aeson.decode $ BSL.pack $ show strTime
+      maybeWS   = readMay $ strWS
+      maybeEvt  = Event <$> maybeTime <*> maybeWS
+  in (wn, tk, ) <$> maybeEvt
+ 
 testTasks :: [Task]
 testTasks = 
-  [ Task "acbd" "1 10" "list-01.txt" $ Map.fromList [("", State Start t)] ]
+  [ Task 
+      (TaskKey "acbd" "1 10") 
+      "list-01.txt" $ 
+      Map.fromList [("", Event t Started)] ]
   where
     t = unsafePerformIO $ getCurrentTime
-
-
-

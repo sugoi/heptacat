@@ -25,8 +25,8 @@ import Heptacat.Task.IO (getTaskList)
 import Heptacat.Utils (gitUrl2Dir, md5, withWorkingDirectory, gitAtomically)
 
 data Preference = 
-     Preference { globalProgress :: Event ,
-                  localProgress  :: Event ,
+     Preference { globalProgress :: WorkState ,
+                  localProgress  :: WorkState ,
                   taskMD5 :: String
                 }
   deriving (Eq, Ord, Show)
@@ -37,9 +37,9 @@ myWorkerName = myProjectConfig ^. workerNameInCharge
 prefer :: Task -> (Preference, Task)
 prefer t = (Preference gp lp ha, t)
   where
-    ss = t ^. taskState
-    gp = maximum $ (Intact:) $ map (^. event) $ map snd $ Map.toList $ ss
-    lp = maybe Intact id $ fmap (^. event) $ Map.lookup myWorkerName $ ss
+    ss = t ^. taskEvents
+    gp = maximum $ (Intact:) $ map (^. workState) $ map snd $ Map.toList $ ss
+    lp = maybe Intact id $ fmap (^. workState) $ Map.lookup myWorkerName $ ss
     ha = md5 $ (myWorkerName ++) $ show t
 
 
@@ -85,6 +85,6 @@ main = do
             (myProjectConfig ^. recordRepo.progressDir) </> 
             (targetTask ^. taskFileName ++ ".by." ++ myWorkerName)
       appendFile progFn $ (++"\n") $
-        encodeState myWorkerName targetTask (State Start time)
+        encodeEvent myWorkerName (targetTask ^. taskKey )  (Event time Started)
     return ()
 

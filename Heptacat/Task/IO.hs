@@ -5,19 +5,23 @@ import qualified Control.Lens as Lens
 import           Control.Monad (forM)
 import           Data.Char (isSpace)
 import qualified Data.Map as Map
+import           Data.Maybe
 import           System.FilePath ((</>))
 import qualified System.IO.Strict as Strict
 
 import Heptacat.Main.ProjectConfig
 import Heptacat.Project
 import Heptacat.Task
-import Heptacat.Utils (gitUrl2Dir, pipeFromSuccess, nonCommentLines, md5, pipeFromFinish)
+import Heptacat.Utils 
+  (gitUrl2Dir, pipeFromSuccess, nonCommentLines,
+   md5, pipeFromFinish, wordsN)
  
 data TaskPreference = 
-    TaskPreference { globalProgress :: Event ,
-                     localProgress  :: Event ,
-                     taskMD5 :: String
-                     }
+    TaskPreference
+      { globalProgress :: Event ,
+        localProgress  :: Event ,
+        taskMD5 :: String
+      }
   deriving (Eq, Show)
 
 
@@ -28,15 +32,19 @@ getTaskList = do
       prDir   = recoDir </>  (myProjectConfig ^. recordRepo.progressDir)
   files <- pipeFromSuccess "ls" [tlDir]
   files2 <- pipeFromFinish "ls" [prDir]  
-  print files2
-  tasks00 <- fmap concat $ forM (filter (/= "README") $ lines files) $ \taskFn -> do
-    con <- fmap nonCommentLines $ Strict.readFile $ tlDir </> taskFn
-    let parseTask :: String -> Task
-        parseTask str = 
-          let (_  ,rest1) = span isSpace         str
-              (ref,rest2) = span (not . isSpace) rest1
-              cmdarg      = dropWhile isSpace rest2
-          in Task ref cmdarg taskFn Map.empty
-        tasks0 = map parseTask con
-    return tasks0
+  print $ "progress files : " ++ files2
+  progs00 <- fmap concat $ forM (filter (/= "README") $ lines files2) $
+    \progFn -> do
+      con <- fmap nonCommentLines $ Strict.readFile $ prDir </> progFn
+      return $ mapMaybe decodeEvent con      
+
+  tasks00 <- fmap concat $ forM (filter (/= "README") $ lines files) $
+    \taskFn -> do
+      con <- fmap nonCommentLines $ Strict.readFile $ tlDir </> taskFn
+      let parseTask :: String -> Task
+          parseTask str = 
+            let ((ref,cmdarg):_) = wordsN str
+            in Task (TaskKey ref cmdarg) taskFn Map.empty
+          tasks0 = map parseTask con
+      return tasks0
   return tasks00
