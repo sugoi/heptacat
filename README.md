@@ -12,14 +12,14 @@ heptacat interactive tutorial
 ~$ mkdir heptacat-test; cd heptacat-test
 heptacat-test$ mkdir node-m; cd node-m  # let's pretend that this is the master node
 node-m$ git clone --bare git@github.com:sugoi/heptacat-example-subject.git
-Cloning into 'heptacat-example-subject'...
+Cloning into 'heptacat-example-subject.git'...
 remote: Counting objects: 30, done.
 remote: Compressing objects: 100% (25/25), done.
 remote: Total 30 (delta 12), reused 17 (delta 3)
 Receiving objects: 100% (30/30), 4.79 KiB, done.
 Resolving deltas: 100% (12/12), done.
 node-m$ git clone --bare git@github.com:sugoi/heptacat-example-record.git
-Cloning into 'heptacat-example-record'...
+Cloning into 'heptacat-example-record.git'...
 remote: Counting objects: 14, done.
 remote: Compressing objects: 100% (11/11), done.
 remote: Total 14 (delta 2), reused 10 (delta 1)
@@ -39,6 +39,7 @@ node-w0$ emacs project.yml
 node-w0$ cat project.yml
 workerNameInCharge: 'worker0'
 recordRepo:
+  taskProgressDir: progress
   workerStateDir: worker
   recordRepoUrl: /home/nushio/heptacat-test/node-m/heptacat-example-record.git
   taskListDir: task

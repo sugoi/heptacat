@@ -2,19 +2,19 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Heptacat.Worker where
+module Heptacat.Task where
 
 import           Control.Applicative ((<|>))
 import           Control.Lens
 import           Data.Aeson
 import           Data.Aeson.TH
--- import qualified Data.Aeson.Generic as DAG
 import           Data.Data
+import qualified Data.Map as Map
 import           Data.Time (UTCTime, getCurrentTime)
 import           GHC.Generics
 import           System.IO.Unsafe
 
-data Event = Start | Success | Timeout | Failure
+data Event = Start | Timeout | Failure | Success
     deriving (Eq, Show, Data, Typeable, Generic)
 $(makeLenses ''Event)
 $(deriveJSON id ''Event)
@@ -29,21 +29,21 @@ $(deriveJSON (drop 1) ''State)
   
 data Task = Task
   {
-    _cmdLine :: String,
-    _workerStates :: [State]
+    _reflog  :: String,
+    _cmdLineArgs :: String,
+    _taskState :: Map.Map String State
   }
     deriving (Eq, Show, Data, Typeable, Generic)
 
 $(makeLenses ''Task)
-$(deriveToJSON (drop 1) ''Task)
+$(deriveJSON (drop 1) ''Task)
 
-instance FromJSON Task where
-  parseJSON val =
-    let tryFromStr = fmap (\str -> Task str []) . parseJSON
-    in tryFromStr val  <|> $(mkParseJSON (drop 1) ''Task) val
 
 testTasks :: [Task]
 testTasks = 
-  [ Task "acbd 1 10" [State Start t] ]
+  [ Task "acbd" "1 10" $ Map.fromList [("", State Start t)] ]
   where
     t = unsafePerformIO $ getCurrentTime
+
+
+

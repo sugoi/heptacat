@@ -8,6 +8,7 @@ import           Control.Monad
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
+import           Data.Maybe
 import qualified Data.Yaml as Yaml
 import           System.Cmd (system, rawSystem)
 import           System.Directory (doesDirectoryExist)
@@ -32,7 +33,9 @@ prepareCloneRepo giturl = do
 main :: IO ()
 main = do
   print myOptions
-  (Just projConfig0) <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
+  parsePF <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
+  projConfig0 <- maybe (error $ projectFileName myOptions ++ " : no parse.") return parsePF
+
   let newName = workerName myOptions
       projConfig 
         | newName /= "" 
@@ -46,6 +49,7 @@ main = do
 
   prepareCloneRepo $ projConfig ^. subjectRepo . url
   prepareCloneRepo $ projConfig ^. recordRepo  . url
+
   let subjDir = gitUrl2Dir $ projConfig ^. subjectRepo . url
       recoDir = gitUrl2Dir $ projConfig ^. recordRepo . url
   withWorkingDirectory recoDir $ do      

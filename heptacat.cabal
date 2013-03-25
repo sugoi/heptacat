@@ -24,13 +24,14 @@ library
                      Heptacat.Options
                      Heptacat.Project
                      Heptacat.Project.IO
+                     Heptacat.Task
                      Heptacat.Utils
-                     Heptacat.Worker
 
   build-depends:     base ==4.*
                    , aeson >= 0.6.1
                    , bytestring 
                    , cmdargs >= 0.10.2
+                   , containers >= 0.5
                    , data-default >= 0.5
                    , directory 
                    , filepath

@@ -14,7 +14,11 @@ import           System.IO
 import           System.Console.CmdArgs.Text
 import           Text.Printf
 
+
+
 type ProjIO = S.StateT Project IO
+
+
 
 getProject :: IO Project
 getProject = S.execStateT ioProj def
@@ -48,6 +52,10 @@ ioProj = do
   askStr ["Tasklist directory contains multiple files" ,
           "that each contains a list of tasks."]
     "tasklist directory?" $ recordRepo . taskListDir
+
+  askStr ["Task progress directory contains files" ,
+          "that corresponds to task files" ]
+    "progress directory?" $ recordRepo . taskProgressDir
 
   askStr ["The worker-state directory will contain" ,
           "the history of the workers."]
