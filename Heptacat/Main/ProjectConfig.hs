@@ -1,4 +1,4 @@
-module Heptacat.Main.WorkerConfig where
+module Heptacat.Main.ProjectConfig where
 
 import           Control.Applicative
 import qualified Control.Lens as Lens
@@ -11,9 +11,9 @@ import Heptacat.Options
 import Heptacat.Project
 import Heptacat.Utils
 
-{-# NOINLINE myWorkerConfig #-}
-myWorkerConfig :: Project
-myWorkerConfig = unsafePerformIO $ do
+{-# NOINLINE myProjectConfig #-}
+myProjectConfig :: Project
+myProjectConfig = unsafePerformIO $ do
   let projFn = projectFileName myCmdLineOptions               
   parsePF <- Yaml.decode <$> BS.readFile projFn
   projConfig0 <- maybe (error $ projFn ++ " : no parse.") return parsePF

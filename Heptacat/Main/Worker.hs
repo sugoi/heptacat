@@ -36,7 +36,7 @@ main = do
   print myCmdLineOptions
   BSL.putStrLn $ Aeson.encode myWorkerConfig
   when (null $ myWorkerConfig ^. workerNameInCharge) $ do
-    putStrLn "worker name cannot be obtained neither from configure file nor command line options."        
+    putStrLn "worker name cannot be obtained neither from the configure file nor command line options."        
     exitFailure
 
   prepareCloneRepo $ myWorkerConfig ^. subjectRepo . url
