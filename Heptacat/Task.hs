@@ -16,7 +16,7 @@ import           System.IO.Unsafe
 
 import           Heptacat.Project
 
-data Event = Start | Timeout | Failure | Success
+data Event = Intact | Start | Timeout | Failure | Success
     deriving (Eq, Show, Data, Typeable, Generic)
 $(makeLenses ''Event)
 $(deriveJSON id ''Event)
@@ -39,6 +39,8 @@ data Task = Task
 
 $(makeLenses ''Task)
 $(deriveJSON (drop 1) ''Task)
+
+
 
 
 testTasks :: [Task]

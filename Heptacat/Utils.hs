@@ -1,11 +1,13 @@
 module Heptacat.Utils where
 
-import Data.Char (isSpace)
-import Data.String.Utils (split)
-import System.Cmd.Utils (pipeFrom, forceSuccess)
-import System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
-import System.Process
-import System.IO
+import           Data.Char (isSpace)
+import qualified Data.Hash.MD5 as MD5
+import           Data.String.Utils (split)
+import           System.Cmd.Utils (pipeFrom, forceSuccess)
+import           System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
+import           System.Process
+import           System.IO
+
 
 gitUrl2Dir :: String -> FilePath
 gitUrl2Dir url =
@@ -64,3 +66,5 @@ nonCommentLines = filter (not . isComment) . lines
         ('#':_) -> True
         _       -> False
 
+md5 :: Show a => a -> String
+md5 = MD5.md5s . MD5.Str . show

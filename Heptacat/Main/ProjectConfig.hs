@@ -26,5 +26,5 @@ myProjectConfig = unsafePerformIO $ do
            = Lens.set workerNameInCharge newName projConfig0 
         | otherwise = projConfig0
   when (any isSpace $ projConfig ^. workerNameInCharge ) $
-    fail $ printf "Worker name %s must not contain spaces." $ projConfig ^. workerNameInCharge
+    fail $ printf "Worker name '%s' must not contain spaces." $ projConfig ^. workerNameInCharge
   return projConfig

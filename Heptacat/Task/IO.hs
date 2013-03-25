@@ -11,8 +11,14 @@ import qualified System.IO.Strict as Strict
 import Heptacat.Main.ProjectConfig
 import Heptacat.Project
 import Heptacat.Task
-import Heptacat.Utils (gitUrl2Dir, pipeFromSuccess, nonCommentLines)
+import Heptacat.Utils (gitUrl2Dir, pipeFromSuccess, nonCommentLines, md5)
  
+data TaskPreference = 
+    TaskPreference { globalProgress :: Event ,
+                     localProgress  :: Event ,
+                     taskMD5 :: String
+                     }
+  deriving (Eq, Show)
 
 
 getTaskList :: IO [Task]

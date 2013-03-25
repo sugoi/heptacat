@@ -28,8 +28,9 @@ Resolving deltas: 100% (2/2), done.
 node-m$ cd ..
 ~~~~
 
-**2.** Copy the project file, edit it to point to the local repository.
-Also let us specify the worker name `worker0` for it.
+**2.** Copy the project file, edit it to point to the local
+repository.  Also let us specify the worker name `worker0` for
+it. Worker name must not contain whitespace characters.
 
 ~~~~ bash
 heptacat-test$ mkdir node-w0
