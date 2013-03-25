@@ -63,8 +63,3 @@ instance Default Project where
 $(makeLenses ''Project)
 $(deriveJSON (drop 1) ''Project)
 
-{-# NOINLINE myProjectConfig #-}
-myProjectConfig :: Project
-myProjectConfig = unsafePerformIO $ do
-  parsePF <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
-  projConfig0 <- maybe (error $ projectFileName myOptions ++ " : no parse.") return parsePF

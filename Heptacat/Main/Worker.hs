@@ -19,6 +19,7 @@ import           Text.Printf
 import Heptacat.Options
 import Heptacat.Project
 import Heptacat.Utils
+import Heptacat.Main.WorkerConfig
 
 prepareCloneRepo :: String -> IO ()
 prepareCloneRepo giturl = do
@@ -31,29 +32,20 @@ prepareCloneRepo giturl = do
   return ()
 
 main :: IO ()
-main = do
-  print myOptions
-  parsePF <- Yaml.decode <$> BS.readFile (projectFileName myOptions)
-  projConfig0 <- maybe (error $ projectFileName myOptions ++ " : no parse.") return parsePF
-
-  let newName = workerName myOptions
-      projConfig 
-        | newName /= "" 
-           = Lens.set workerNameInCharge newName projConfig0 
-        | otherwise = projConfig0
-        
-  BSL.putStrLn $ Aeson.encode projConfig
-  when (null $ projConfig ^. workerNameInCharge) $ do
+main = do        
+  print myCmdLineOptions
+  BSL.putStrLn $ Aeson.encode myWorkerConfig
+  when (null $ myWorkerConfig ^. workerNameInCharge) $ do
     putStrLn "worker name cannot be obtained neither from configure file nor command line options."        
     exitFailure
 
-  prepareCloneRepo $ projConfig ^. subjectRepo . url
-  prepareCloneRepo $ projConfig ^. recordRepo  . url
+  prepareCloneRepo $ myWorkerConfig ^. subjectRepo . url
+  prepareCloneRepo $ myWorkerConfig ^. recordRepo  . url
 
-  let subjDir = gitUrl2Dir $ projConfig ^. subjectRepo . url
-      recoDir = gitUrl2Dir $ projConfig ^. recordRepo . url
+  let subjDir = gitUrl2Dir $ myWorkerConfig ^. subjectRepo . url
+      recoDir = gitUrl2Dir $ myWorkerConfig ^. recordRepo . url
   withWorkingDirectory recoDir $ do      
-    system $ printf "git config user.name %s" (projConfig ^. workerNameInCharge)
+    system $ printf "git config user.name %s" $ myWorkerConfig ^. workerNameInCharge
     system "git config  merge.tool heptacat"
     system $ "git config  mergetool.heptacat.cmd "
           ++ "'heptacat merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"'"

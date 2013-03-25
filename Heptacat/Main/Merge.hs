@@ -1,10 +1,8 @@
-{-
+module Heptacat.Main.Merge where
 
+import qualified Heptacat.Options as Opt
 
-
-[nushio@myhost heptacat-example-record]$  git config  merge.tool heptacat
-[nushio@myhost heptacat-example-record]$  git config  mergetool.heptacat.cmd 'heptacat merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"'
-[nushio@myhost heptacat-example-record]$ git config mergetool.trustExitCode false
-
-
--}
+main :: IO ()
+main = do
+  let (Opt.Merge argv) = Opt.myCmdLineOptions
+  mapM_ putStrLn $ "heptacat invoked with merge mode.": argv 

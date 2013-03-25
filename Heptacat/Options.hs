@@ -21,9 +21,9 @@ data MyOptions
   deriving (Show, Data,Typeable)
 
 
-{-# NOINLINE myOptions #-}
-myOptions :: MyOptions
-myOptions =
+{-# NOINLINE myCmdLineOptions #-}
+myCmdLineOptions :: MyOptions
+myCmdLineOptions =
   unsafePerformIO $ do
     parser <- Opt.processArgs heptacatOpt
     args <- Opt.cmdArgsApply parser

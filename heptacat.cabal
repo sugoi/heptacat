@@ -20,7 +20,9 @@ library
   exposed-modules:     
                      Heptacat.Main
                      Heptacat.Main.Init
+                     Heptacat.Main.Merge
                      Heptacat.Main.Worker
+                     Heptacat.Main.WorkerConfig
                      Heptacat.Options
                      Heptacat.Project
                      Heptacat.Project.IO
