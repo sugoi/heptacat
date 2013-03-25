@@ -55,7 +55,7 @@ ioProj = do
 
   askStr ["Task progress directory contains files" ,
           "that corresponds to task files" ]
-    "progress directory?" $ recordRepo . taskProgressDir
+    "progress directory?" $ recordRepo . progressDir
 
   askStr ["The worker-state directory will contain" ,
           "the history of the workers."]

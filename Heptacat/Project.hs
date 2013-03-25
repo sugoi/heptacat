@@ -33,7 +33,7 @@ data RecordRepo = RecordRepo
   {
     _recordRepoUrl :: String,
     _taskListDir :: FilePath,
-    _taskProgressDir :: FilePath,
+    _progressDir :: FilePath,
     _workerStateDir :: FilePath,
     _resultDir :: FilePath
   }

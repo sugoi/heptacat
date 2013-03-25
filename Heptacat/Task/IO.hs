@@ -11,7 +11,7 @@ import qualified System.IO.Strict as Strict
 import Heptacat.Main.ProjectConfig
 import Heptacat.Project
 import Heptacat.Task
-import Heptacat.Utils (gitUrl2Dir, pipeFromSuccess, nonCommentLines, md5)
+import Heptacat.Utils (gitUrl2Dir, pipeFromSuccess, nonCommentLines, md5, pipeFromFinish)
  
 data TaskPreference = 
     TaskPreference { globalProgress :: Event ,
@@ -25,7 +25,10 @@ getTaskList :: IO [Task]
 getTaskList = do
   let recoDir = gitUrl2Dir $ myProjectConfig ^. recordRepo.url
       tlDir   = recoDir </>  (myProjectConfig ^. recordRepo.taskListDir)
+      prDir   = recoDir </>  (myProjectConfig ^. recordRepo.progressDir)
   files <- pipeFromSuccess "ls" [tlDir]
+  files2 <- pipeFromFinish "ls" [prDir]  
+  print files2
   tasks00 <- fmap concat $ forM (filter (/= "README") $ lines files) $ \taskFn -> do
     con <- fmap nonCommentLines $ Strict.readFile $ tlDir </> taskFn
     let parseTask :: String -> Task
@@ -33,8 +36,7 @@ getTaskList = do
           let (_  ,rest1) = span isSpace         str
               (ref,rest2) = span (not . isSpace) rest1
               cmdarg      = dropWhile isSpace rest2
-          in Task ref cmdarg Map.empty
+          in Task ref cmdarg taskFn Map.empty
         tasks0 = map parseTask con
     return tasks0
-  print tasks00
-  return []
+  return tasks00

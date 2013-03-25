@@ -56,6 +56,11 @@ pipeFromSuccess path argv = do
   forceSuccess ph
   return ret
 
+pipeFromFinish :: FilePath -> [String] -> IO String
+pipeFromFinish path argv = do
+  (_, ret)<- pipeFrom path argv
+  return ret
+
 
 nonCommentLines :: String -> [String]
 nonCommentLines = filter (not . isComment) . lines
