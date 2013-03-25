@@ -1,6 +1,7 @@
 module Heptacat.Utils where
 
 import Data.String.Utils (split)
+import System.Cmd.Utils (pipeFrom, forceSuccess)
 import System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
 import System.Process
 import System.IO
@@ -44,3 +45,11 @@ gitAtomically doSomething = do
   putStrLn oldCommitId
   doSomething
 -- git reset --hard reflog
+
+
+pipeFromSuccess :: FilePath -> [String] -> IO String
+pipeFromSuccess path argv = do
+  (ph, ret)<- pipeFrom path argv
+  forceSuccess ph
+  return ret
+

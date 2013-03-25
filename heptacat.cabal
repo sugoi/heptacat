@@ -22,11 +22,12 @@ library
                      Heptacat.Main.Init
                      Heptacat.Main.Merge
                      Heptacat.Main.Worker
-                     Heptacat.Main.WorkerConfig
+                     Heptacat.Main.ProjectConfig
                      Heptacat.Options
                      Heptacat.Project
                      Heptacat.Project.IO
                      Heptacat.Task
+                     Heptacat.Task.IO
                      Heptacat.Utils
 
   build-depends:     base ==4.*
