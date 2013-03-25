@@ -38,6 +38,9 @@ getTaskList = do
       con <- fmap nonCommentLines $ Strict.readFile $ prDir </> progFn
       return $ mapMaybe decodeEvent con      
 
+  print progs00      
+  mapM_ print progs00      
+
   tasks00 <- fmap concat $ forM (filter (/= "README") $ lines files) $
     \taskFn -> do
       con <- fmap nonCommentLines $ Strict.readFile $ tlDir </> taskFn

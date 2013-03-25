@@ -18,7 +18,7 @@ import           GHC.Generics
 import           Safe (readMay)
 import           System.IO.Unsafe
 
-import           Heptacat.Utils (wordsN)
+import           Heptacat.Utils (decodeA1, wordsN)
 import           Heptacat.Project
 
 data WorkState = Intact | Started | Timeout | Failure | Success
@@ -71,7 +71,7 @@ decodeEvent str =
        (wn,_):
        (strRef,args):_) = wordsN str
       tk = TaskKey strRef args
-      maybeTime = Aeson.decode $ BSL.pack $ show strTime
+      maybeTime = decodeA1 $ BSL.pack $ show strTime
       maybeWS   = readMay $ strWS
       maybeEvt  = Event <$> maybeTime <*> maybeWS
   in (wn, tk, ) <$> maybeEvt

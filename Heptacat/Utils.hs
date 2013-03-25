@@ -1,13 +1,26 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Heptacat.Utils where
 
+import           Control.Monad
+import qualified Data.Aeson as Aeson
+import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Data.Char (isSpace)
 import qualified Data.Hash.MD5 as MD5
+import           Data.Monoid ((<>))
 import           Data.String.Utils (split)
+import           Safe (headMay)
 import           System.Cmd.Utils (pipeFrom, forceSuccess)
 import           System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
 import           System.Process
 import           System.IO
 
+
+-- | decode a singleton value (which is, strictly speaking,
+--   not allowed at the top level) out of JSON.
+
+decodeA1 :: Aeson.FromJSON a => BSL.ByteString -> Maybe a
+decodeA1 str = (headMay =<<) $ Aeson.decode $ "[" <> str <> "]"
 
 gitUrl2Dir :: String -> FilePath
 gitUrl2Dir url =
