@@ -20,10 +20,10 @@ main = do
   let prepareDir dirLens desc = do
         createDirectoryIfMissing True $ proj ^. recordRepo.dirLens
         writeFile ((proj ^. recordRepo.dirLens) </> "README") desc
-  prepareDir taskListDir     "# task list are placed here."
-  prepareDir taskProgressDir "# the progress of each task file will be put here."
-  prepareDir workerStateDir  "# the log of each worker will be here."
-  prepareDir resultDir       "# the results will go here."
+  prepareDir taskListDir    "# task list are placed here."
+  prepareDir progressDir    "# the progress of each task file will be put here."
+  prepareDir workerStateDir "# the log of each worker will be here."
+  prepareDir resultDir      "# the results will go here."
 
 
 
