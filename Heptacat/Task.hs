@@ -14,6 +14,8 @@ import           Data.Time (UTCTime, getCurrentTime)
 import           GHC.Generics
 import           System.IO.Unsafe
 
+import           Heptacat.Project
+
 data Event = Start | Timeout | Failure | Success
     deriving (Eq, Show, Data, Typeable, Generic)
 $(makeLenses ''Event)
@@ -31,7 +33,7 @@ data Task = Task
   {
     _reflog  :: String,
     _cmdLineArgs :: String,
-    _taskState :: Map.Map String State
+    _taskState :: Map.Map WorkerName State
   }
     deriving (Eq, Show, Data, Typeable, Generic)
 

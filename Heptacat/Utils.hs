@@ -1,5 +1,6 @@
 module Heptacat.Utils where
 
+import Data.Char (isSpace)
 import Data.String.Utils (split)
 import System.Cmd.Utils (pipeFrom, forceSuccess)
 import System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
@@ -52,4 +53,14 @@ pipeFromSuccess path argv = do
   (ph, ret)<- pipeFrom path argv
   forceSuccess ph
   return ret
+
+
+nonCommentLines :: String -> [String]
+nonCommentLines = filter (not . isComment) . lines
+  where
+    isComment str = let xs = dropWhile isSpace str in
+      case xs of
+        ""      -> True
+        ('#':_) -> True
+        _       -> False
 

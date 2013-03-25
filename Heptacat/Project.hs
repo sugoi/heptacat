@@ -48,10 +48,11 @@ instance HasUrl RecordRepo where
 instance Default RecordRepo where
   def = RecordRepo "" "task" "progress" "worker" "result"
 
+type WorkerName = String
 
 data Project = Project
   {
-    _workerNameInCharge :: String,
+    _workerNameInCharge :: WorkerName,
     _subjectRepo :: SubjectRepo,
     _recordRepo :: RecordRepo
   }
