@@ -60,6 +60,10 @@ main = do
     putStrLn "worker name cannot be obtained neither from the configure file nor command line options."        
     exitFailure
 
+  forever $ mainLoop
+
+mainLoop :: IO ()
+mainLoop = do
   prepareCloneRepo $ myProjectConfig ^. subjectRepo . url
   prepareCloneRepo $ myProjectConfig ^. recordRepo  . url
 
@@ -71,6 +75,8 @@ main = do
     systemSuccess $ "git config  mergetool.heptacat.cmd "
           ++ "'heptacat merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"'"
     systemSuccess "git config mergetool.trustExitCode false"
+
+
   ts <- getTaskList
   let sortedTaskList =
         map snd $ 
@@ -119,7 +125,7 @@ main = do
     gitAtomically $ do
       systemSuccess $ printf "mkdir -p %s" resultDirFP
 
-      systemSuccess $ printf "cp ../%s/%s %s/" 
+      systemSuccess $ printf "cp -r ../%s/%s %s/" 
         subjDir (myProjectConfig^.subjectRepo.outputDir) 
         resultDirFP
 
