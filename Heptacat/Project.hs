@@ -26,7 +26,7 @@ instance HasUrl SubjectRepo where
   url = subjectRepoUrl
 
 instance Default SubjectRepo where
-  def = SubjectRepo "" "output" "start"
+  def = SubjectRepo "" "output" "./start"
 
 
 data RecordRepo = RecordRepo

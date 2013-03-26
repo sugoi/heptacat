@@ -8,11 +8,13 @@ import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Data.Function (on)
 import qualified Data.List as List
 import qualified Data.Map as Map
-import           Data.Time (getCurrentTime)
+import           Data.Time (getCurrentTime, formatTime)
 import           System.Cmd (system, rawSystem)
 import           System.Directory (doesDirectoryExist)
 import           System.Exit
 import           System.FilePath ((</>))
+import           System.IO 
+import           System.Locale
 import           Text.Printf
 
 import Heptacat.Main.ProjectConfig
@@ -47,7 +49,7 @@ prepareCloneRepo giturl = do
   rde <- doesDirectoryExist repoDir
   when (not rde) $ do
     systemSuccess $ printf "git clone %s" giturl
-    systemSuccess $ printf "cd %s; git pull" repoDir
+    systemSuccess $ printf "cd %s; git pull origin master" repoDir
   return ()
 
 main :: IO ()
@@ -75,13 +77,58 @@ main = do
         List.sortBy (compare `on` fst) $ 
         map prefer $ ts
       (targetTask : _) = sortedTaskList ++ error "no task available."
+
+      progFn = 
+          (myProjectConfig ^. recordRepo.progressDir) </> 
+          (targetTask ^. taskFileName ++ ".by." ++ myWorkerName)
+
   withWorkingDirectory recoDir $ do      
     gitAtomically $ do
-      time0 <- getCurrentTime
-      let progFn = 
-            (myProjectConfig ^. recordRepo.progressDir) </> 
-            (targetTask ^. taskFileName ++ ".by." ++ myWorkerName)
+      timeStarted <- getCurrentTime
       appendFile progFn $ (++"\n") $
-        encodeEvent myWorkerName (targetTask ^. taskKey )  (Event time0 Started)
+        encodeEvent myWorkerName (targetTask ^. taskKey )  (Event timeStarted Started)
       systemSuccess $ printf "git add %s" progFn
       systemSuccess $ printf "git commit -m 'started'"
+  
+  exitCodeSubj <- withWorkingDirectory subjDir $ do      
+    systemSuccess $ printf "git reset --hard %s" $ targetTask ^. taskKey.commitHash
+    let cmd = printf "%s %s" 
+               (myProjectConfig ^. subjectRepo.startUpScript) 
+               (targetTask ^. taskKey.cmdLineArgs)
+    systemSuccess $ printf "echo -en \"\\033[1;33mHEPTACAT😸\\033[0m:\"" 
+    printf "%s\n" cmd
+    system $ cmd
+  
+  timeFinished <- getCurrentTime
+
+  let resultDir0 n 
+        | n == 0    = formatTime defaultTimeLocale "%Y/%m/%d/%H%M%S" timeFinished
+        | otherwise = resultDir0 0 ++ "-" ++ printf "%04d" n
+
+      toFullPathRD x = (myProjectConfig^.recordRepo . resultDir) </> x ++ "-" ++ myWorkerName
+      findFreeRDN n = do
+        x <- doesDirectoryExist $ recoDir </> toFullPathRD (resultDir0 n)
+        case x of False -> return (n::Integer)
+                  True  -> findFreeRDN (n+1)
+  freeRDN <- findFreeRDN 0
+  let resultDirFP = toFullPathRD (resultDir0 freeRDN)
+
+
+  withWorkingDirectory recoDir $ do      
+    let ev = Event timeFinished $ if exitCodeSubj == ExitSuccess then Success else Failure
+    gitAtomically $ do
+      systemSuccess $ printf "mkdir -p %s" resultDirFP
+
+      systemSuccess $ printf "cp ../%s/%s %s/" 
+        subjDir (myProjectConfig^.subjectRepo.outputDir) 
+        resultDirFP
+
+
+      writeFile (resultDirFP </> "input.txt") $ unlines $
+        [ encodeEvent myWorkerName (targetTask ^. taskKey ) ev]
+
+      systemSuccess $ printf "git add %s" resultDirFP
+      appendFile progFn $ (++"\n") $
+        encodeEvent myWorkerName (targetTask ^. taskKey ) ev
+      systemSuccess $ printf "git add %s" progFn
+      systemSuccess $ printf "git commit -m 'finished'"

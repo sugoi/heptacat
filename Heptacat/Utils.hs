@@ -53,7 +53,7 @@ gitCommitHash = do
   (_,hOut,_,hProc) <- runInteractiveCommand "git rev-parse HEAD"
   str <- hGetContents hOut
   waitForProcess hProc
-  return $ words str !! 1
+  return $ head $ words $ str
 
 gitAtomically :: IO a -> IO a
 gitAtomically doSomething = do
