@@ -47,20 +47,20 @@ withWorkingDirectory dir io = do
   changeWorkingDirectory oldwd
   return ret
 
-gitReflog :: IO String
-gitReflog = do
-  (_,hOut,_,hProc) <- runInteractiveCommand "git log | head -n 1"
+gitCommitHash :: IO String
+gitCommitHash = do
+  (_,hOut,_,hProc) <- runInteractiveCommand "git rev-parse HEAD"
   str <- hGetContents hOut
   waitForProcess hProc
   return $ words str !! 1
 
 gitAtomically :: IO a -> IO a
 gitAtomically doSomething = do
-  _ <- system "git pull origin master"            
-  oldReflog <- gitReflog
-  putStrLn oldReflog
+  _ <- system "git pull origin master"
+  oldCommitHash <- gitCommitHash
+  putStrLn oldCommitHash
   ret <- doSomething
-  _ <- system "git push origin master"            
+  _ <- system "git push origin master"
   return ret
 -- git reset --hard reflog
 

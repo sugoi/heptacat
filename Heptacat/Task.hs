@@ -36,7 +36,7 @@ $(deriveJSON (drop 1) ''Event)
 
 data TaskKey = TaskKey
   {
-    _reflog  :: String,
+    _commitHash  :: String,
     _cmdLineArgs :: String
   }
     deriving (Eq, Ord, Show, Data, Typeable, Generic)
@@ -61,7 +61,7 @@ encodeEvent wn tk ev = unwords
   [read $ BSL.unpack $ Aeson.encode $ ev ^. timeStamp, 
    take 7 $ (++ repeat ' ') $ show $ ev ^. workState, 
    wn, 
-   tk ^. reflog, 
+   tk ^. commitHash, 
    tk ^. cmdLineArgs]
 
 decodeEvent :: String -> Maybe (WorkerName, TaskKey, Event)      
