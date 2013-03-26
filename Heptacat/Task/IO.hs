@@ -25,6 +25,8 @@ data TaskPreference =
   deriving (Eq, Show)
 
 
+type TWEMap = Map.Map TaskKey (Map.Map WorkerName Event)
+
 getTaskList :: IO [Task]
 getTaskList = do
   let recoDir = gitUrl2Dir $ myProjectConfig ^. recordRepo.url
@@ -38,8 +40,20 @@ getTaskList = do
       con <- fmap nonCommentLines $ Strict.readFile $ prDir </> progFn
       return $ mapMaybe decodeEvent con      
 
-  print progs00      
-  mapM_ print progs00      
+  let mapProgs :: TWEMap
+      mapProgs = foldr go Map.empty progs00
+
+      go :: (WorkerName, TaskKey, Event) -> TWEMap -> TWEMap
+      go (wn, tk, ev) = Map.alter inner tk
+        where
+          inner Nothing = Just $ Map.singleton wn ev
+          inner (Just map1) = Just $ Map.alter inner2 wn map1
+
+          inner2 Nothing = Just ev
+          inner2 (Just ev2) 
+            | ev ^. workState > ev2 ^. workState = Just ev
+            | otherwise                          = Just ev2
+
 
   tasks00 <- fmap concat $ forM (filter (/= "README") $ lines files) $
     \taskFn -> do
@@ -47,7 +61,9 @@ getTaskList = do
       let parseTask :: String -> Task
           parseTask str = 
             let ((ref,cmdarg):_) = wordsN str
-            in Task (TaskKey ref cmdarg) taskFn Map.empty
+                tk = TaskKey ref cmdarg
+            in Task tk taskFn $
+                maybe Map.empty id (Map.lookup tk mapProgs)
           tasks0 = map parseTask con
       return tasks0
   return tasks00

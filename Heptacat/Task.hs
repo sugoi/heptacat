@@ -39,7 +39,7 @@ data TaskKey = TaskKey
     _reflog  :: String,
     _cmdLineArgs :: String
   }
-    deriving (Eq, Show, Data, Typeable, Generic)
+    deriving (Eq, Ord, Show, Data, Typeable, Generic)
 
 $(makeLenses ''TaskKey)
 $(deriveJSON (drop 1) ''TaskKey)

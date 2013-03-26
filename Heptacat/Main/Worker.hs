@@ -86,5 +86,8 @@ main = do
             (targetTask ^. taskFileName ++ ".by." ++ myWorkerName)
       appendFile progFn $ (++"\n") $
         encodeEvent myWorkerName (targetTask ^. taskKey )  (Event time Started)
+      _ <- system $ printf "git add %s" progFn
+      _ <- system $ printf "git commit -m 'started'"
+      return ()
     return ()
 
