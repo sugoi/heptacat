@@ -11,10 +11,11 @@ import           Data.Monoid ((<>))
 import           Data.String.Utils (split)
 import           Safe (headMay)
 import           System.Cmd.Utils (pipeFrom, forceSuccess)
+import           System.Exit
 import           System.Posix.Directory (changeWorkingDirectory, getWorkingDirectory)
 import           System.Process
 import           System.IO
-
+import           Text.Printf
 
 -- | decode a singleton value (which is, strictly speaking,
 --   not allowed at the top level) out of JSON.
@@ -63,6 +64,22 @@ gitAtomically doSomething = do
   _ <- system "git push origin master"
   return ret
 -- git reset --hard reflog
+
+
+systemSuccess :: String -> IO ()
+systemSuccess cmd = do
+  ex <- system cmd
+  case ex of
+    ExitSuccess -> return ()
+    ExitFailure n ->
+      hPrintf stderr "command (%s) failed with return code %d" cmd n
+
+
+systemFinish :: String -> IO ()
+systemFinish cmd = do
+  _ <- system cmd
+  return ()
+
 
 
 pipeFromSuccess :: FilePath -> [String] -> IO String

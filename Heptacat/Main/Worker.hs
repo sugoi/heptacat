@@ -1,16 +1,14 @@
 module Heptacat.Main.Worker where
 
 
-import           Control.Applicative
 import           Control.Lens ((^.))
-import qualified Control.Lens as Lens
 import           Control.Monad
 import qualified Data.Aeson as Aeson
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Data.Function (on)
 import qualified Data.List as List
 import qualified Data.Map as Map
-import           Data.Time (UTCTime, getCurrentTime)
+import           Data.Time (getCurrentTime)
 import           System.Cmd (system, rawSystem)
 import           System.Directory (doesDirectoryExist)
 import           System.Exit
@@ -22,7 +20,7 @@ import Heptacat.Options
 import Heptacat.Project
 import Heptacat.Task as Task
 import Heptacat.Task.IO (getTaskList)
-import Heptacat.Utils (gitUrl2Dir, md5, withWorkingDirectory, gitAtomically)
+import Heptacat.Utils (gitUrl2Dir, md5, withWorkingDirectory, gitAtomically, systemSuccess)
 
 data Preference = 
      Preference { globalProgress :: WorkState ,
@@ -48,9 +46,8 @@ prepareCloneRepo giturl = do
   let repoDir = gitUrl2Dir giturl
   rde <- doesDirectoryExist repoDir
   when (not rde) $ do
-    _ <- rawSystem "git" ["clone", giturl]
-    return ()
-  _ <- system $ printf "cd %s; git pull" repoDir
+    systemSuccess $ printf "git clone %s" giturl
+    systemSuccess $ printf "cd %s; git pull" repoDir
   return ()
 
 main :: IO ()
@@ -67,11 +64,11 @@ main = do
   let subjDir = gitUrl2Dir $ myProjectConfig ^. subjectRepo . url
       recoDir = gitUrl2Dir $ myProjectConfig ^. recordRepo . url
   withWorkingDirectory recoDir $ do      
-    system $ printf "git config user.name %s" $ myWorkerName
-    system "git config  merge.tool heptacat"
-    system $ "git config  mergetool.heptacat.cmd "
+    systemSuccess $ printf "git config user.name %s" $ myWorkerName
+    systemSuccess "git config  merge.tool heptacat"
+    systemSuccess $ "git config  mergetool.heptacat.cmd "
           ++ "'heptacat merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"'"
-    system "git config mergetool.trustExitCode false"
+    systemSuccess "git config mergetool.trustExitCode false"
   ts <- getTaskList
   let sortedTaskList =
         map snd $ 
@@ -86,8 +83,5 @@ main = do
             (targetTask ^. taskFileName ++ ".by." ++ myWorkerName)
       appendFile progFn $ (++"\n") $
         encodeEvent myWorkerName (targetTask ^. taskKey )  (Event time0 Started)
-      _ <- system $ printf "git add %s" progFn
-      _ <- system $ printf "git commit -m 'started'"
-      return ()
-    return ()
-
+      systemSuccess $ printf "git add %s" progFn
+      systemSuccess $ printf "git commit -m 'started'"

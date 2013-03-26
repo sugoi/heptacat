@@ -1,9 +1,7 @@
 module Heptacat.Task.IO where
 
 import           Control.Lens ((^.))
-import qualified Control.Lens as Lens
 import           Control.Monad (forM)
-import           Data.Char (isSpace)
 import qualified Data.Map as Map
 import           Data.Maybe
 import           System.FilePath ((</>))
@@ -14,7 +12,7 @@ import Heptacat.Project
 import Heptacat.Task
 import Heptacat.Utils 
   (gitUrl2Dir, pipeFromSuccess, nonCommentLines,
-   md5, pipeFromFinish, wordsN)
+   pipeFromFinish, wordsN)
  
 data TaskPreference = 
     TaskPreference
