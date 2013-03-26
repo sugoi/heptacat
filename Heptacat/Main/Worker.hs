@@ -80,12 +80,12 @@ main = do
       (targetTask : _) = sortedTaskList ++ error "no task available."
   withWorkingDirectory recoDir $ do      
     gitAtomically $ do
-      time <- getCurrentTime
+      time0 <- getCurrentTime
       let progFn = 
             (myProjectConfig ^. recordRepo.progressDir) </> 
             (targetTask ^. taskFileName ++ ".by." ++ myWorkerName)
       appendFile progFn $ (++"\n") $
-        encodeEvent myWorkerName (targetTask ^. taskKey )  (Event time Started)
+        encodeEvent myWorkerName (targetTask ^. taskKey )  (Event time0 Started)
       _ <- system $ printf "git add %s" progFn
       _ <- system $ printf "git commit -m 'started'"
       return ()
